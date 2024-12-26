@@ -47,8 +47,6 @@ char	**bit_coverter(char *msg)
 	}
 	return (cvt_storage);
 }
-// for (int k = 0; k < str_index; k++)
-//     	printf("%s\n", cvt_storage[k]);
 
 int	main(void)
 {

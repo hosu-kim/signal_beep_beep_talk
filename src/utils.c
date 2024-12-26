@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 18:57:09 by hoskim            #+#    #+#             */
-/*   Updated: 2024/12/24 19:19:42 by hoskim           ###   ########.fr       */
+/*   Updated: 2024/12/26 16:53:55 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,15 @@ int	ft_atoi(const char *str)
 		str++;
 	}
 	return (if_minus * output);
+}
+
+int	ft_strlen(const char *s)
+// returns the length of the provided string.
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
 }
