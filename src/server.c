@@ -1,84 +1,64 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/23 21:38:09 by hoskim            #+#    #+#             */
-/*   Updated: 2024/12/26 18:58:18 by hoskim           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../include/minitalk.h"
-
-// int	main(void)
-// {
-// 	int		pid;
-// 	char	*msg;
-
-// 	pid = getpid();
-// 	printf("Server's PID: %d\n", pid);
-// 	while (1)
-// 	{
-		
-// 	}
-
-// 	return (0);
-// }
-
-// // sigaction
-
 #include <signal.h>
-#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-void	receive_signal(int sig, siginfo_t *info, void *context)
+static int	g_bit_count = 0;  // 비트 카운트
+static char	g_char = 0;       // 받은 문자
+
+// 비트를 받아서 문자로 변환하는 함수
+void	handle_signal(int sig)
 {
-	static int	bit_count = 0;
-	static char	current_char = 0;
-	pid_t		client_pid = info->si_pid;
-
-	(void)context;
-
 	if (sig == SIGUSR1)
-		current_char |= (1 << (7 - bit_count));  // Set bit to 1
-	else if (sig == SIGUSR2)
-		current_char &= ~(1 << (7 - bit_count));  // Set bit to 0
-
-	bit_count++;
-	if (bit_count == 8)
 	{
-		write(1, &current_char, 1);  // Print the received character
-		bit_count = 0;
-		current_char = 0;
+		g_char |= (1 << (7 - g_bit_count));  // 1을 해당 비트에 설정
 	}
-	// Acknowledge the client
-	kill(client_pid, SIGUSR1);
+	else if (sig == SIGUSR2)
+	{
+		g_char &= ~(1 << (7 - g_bit_count));  // 0을 해당 비트에 설정
+	}
+
+	g_bit_count++;
+
+	// 8비트를 다 받으면 문자 출력하고 초기화
+	if (g_bit_count == 8)
+	{
+		write(1, &g_char, 1);  // 문자 출력
+		g_char = 0;            // 문자 초기화
+		g_bit_count = 0;       // 비트 카운트 초기화
+	}
 }
 
+// 서버 실행 함수
 int	main(void)
 {
-	struct sigaction	action;
+	struct sigaction sa;
 
-	action.sa_sigaction = receive_signal;
-	action.sa_flags = SA_SIGINFO;
+	// SIGUSR1과 SIGUSR2에 대한 신호 처리 함수 설정
+	sa.sa_handler = handle_signal;
+	sa.sa_flags = SA_RESTART;
+	sigemptyset(&sa.sa_mask);
 
-	// Set up signal handlers
-	if (sigaction(SIGUSR1, &action, NULL) == -1)
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 	{
-		perror("Error setting SIGUSR1 handler");
+		perror("sigaction");
 		return (1);
 	}
-	if (sigaction(SIGUSR2, &action, NULL) == -1)
+	if (sigaction(SIGUSR2, &sa, NULL) == -1)
 	{
-		perror("Error setting SIGUSR2 handler");
+		perror("sigaction");
 		return (1);
 	}
 
-	printf("Server is running. PID: %d\n", getpid());
+	// 서버 PID 출력
+	printf("Server PID: %d\n", getpid());
+
+	// 무한 대기 (신호를 계속 받을 수 있도록)
 	while (1)
-		pause();  // Wait for signals
+	{
+		pause();  // 신호가 올 때까지 대기
+	}
+
 	return (0);
 }

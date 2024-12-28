@@ -20,7 +20,7 @@ char	**cvt_storage_allotator(char *msg)
 	return (cvt_storage);
 }
 
-char	**bit_coverter(char *msg)
+char	**convert_to_bits(char *msg)
 {
 	int		str_index;
 	int		bit_index;
@@ -51,7 +51,7 @@ char	**bit_coverter(char *msg)
 int	main(void)
 {
 	char	*str = "Hello.";
-	char	**result = bit_coverter(str);
+	char	**result = convert_to_bits(str);
 
 	for (int i = 0; result[i] != NULL; i++) {
         free(result[i]);
