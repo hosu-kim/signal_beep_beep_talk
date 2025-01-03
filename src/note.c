@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-char	**cvt_storage_allotator(char *msg)
+char	**bit_storage_allotator(char *msg)
 {
 	int		msg_len;
 	char	**cvt_storage;
@@ -27,7 +27,7 @@ char	**convert_to_bits(char *msg)
 	int		char_in_ascii;
 	char	**cvt_storage;
 
-	cvt_storage = cvt_storage_allotator(msg);
+	cvt_storage = bit_storage_allotator(msg);
 	str_index = 0;
 	char_in_ascii = 0;
 	while (msg[str_index] != '\0')
