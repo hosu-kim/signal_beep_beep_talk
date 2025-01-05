@@ -5,80 +5,74 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/23 21:38:09 by hoskim            #+#    #+#             */
-/*   Updated: 2024/12/26 18:58:18 by hoskim           ###   ########.fr       */
+/*   Created: 2025/01/04 20:46:18 by hoskim            #+#    #+#             */
+/*   Updated: 2025/01/05 23:06:37 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
-
-// int	main(void)
-// {
-// 	int		pid;
-// 	char	*msg;
-
-// 	pid = getpid();
-// 	printf("Server's PID: %d\n", pid);
-// 	while (1)
-// 	{
-		
-// 	}
-
-// 	return (0);
-// }
-
-// // sigaction
-
 #include <signal.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
 
-void	receive_signal(int sig, siginfo_t *info, void *context)
+# define BUFFER_SIZE 8
+
+void	setup_signals(void)
 {
-	static int	bit_count = 0;
-	static char	current_char = 0;
-	pid_t		client_pid = info->si_pid;
+	struct sigaction sa; // the type, sigaction is from signal.h, sa is the name of the structure.
+	
+	sa.sa_flags = SA_SIGINFO; // let more parameters than just a signal number.
+	sa.sa_sigaction = signal_handler; // sets a function to get signals
+	sigaction(SIGUSR1, &sa, NULL); // sets which type of signals it provides to the function
+	sigaction(SIGUSR2, &sa, NULL);
+}
 
+void	signal_handler(int signal, siginfo_t *info, void *context)
+{
+	static int	bit_array[BUFFER_SIZE];
+	static int	bit_index;
+	static char	msg[1024];
+	static int	char_index;
+	int			i;
+	char		character;
+
+	bit_index = 0;
+	char_index = 0;
 	(void)context;
-
-	if (sig == SIGUSR1)
-		current_char |= (1 << (7 - bit_count));  // Set bit to 1
-	else if (sig == SIGUSR2)
-		current_char &= ~(1 << (7 - bit_count));  // Set bit to 0
-
-	bit_count++;
-	if (bit_count == 8)
+	if (signal == SIGUSR1)
+		bit_array[bit_index] = 0;
+	else
+		bit_array[bit_index] = 1;
+	bit_index++;
+	if (bit_index == BUFFER_SIZE)
 	{
-		write(1, &current_char, 1);  // Print the received character
-		bit_count = 0;
-		current_char = 0;
+		character = 0;
+		i = 0;
+		while (i < BUFFER_SIZE)
+		{
+			character |= (bit_array[i] << i);
+			i++;
+		}
+		msg[char_index++] = character;
+		if (character == '\0')
+		{
+			write(1, msg, char_index - 1);
+			write(1, "\n", 1);
+			char_index = 0;
+		}
+		bit_index = 0;
 	}
-	// Acknowledge the client
-	kill(client_pid, SIGUSR1);
 }
 
 int	main(void)
 {
-	struct sigaction	action;
+	int	pid;
 
-	action.sa_sigaction = receive_signal;
-	action.sa_flags = SA_SIGINFO;
-
-	// Set up signal handlers
-	if (sigaction(SIGUSR1, &action, NULL) == -1)
-	{
-		perror("Error setting SIGUSR1 handler");
-		return (1);
-	}
-	if (sigaction(SIGUSR2, &action, NULL) == -1)
-	{
-		perror("Error setting SIGUSR2 handler");
-		return (1);
-	}
-
-	printf("Server is running. PID: %d\n", getpid());
+	setup_signals();
+	pid = getpid();
+	ft_printf("\nServer is working. Please provide PID to client.\
+			\nPID: %d", pid);
 	while (1)
-		pause();  // Wait for signals
+	{
+		pause();
+	}
 	return (0);
 }

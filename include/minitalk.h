@@ -6,17 +6,19 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 19:01:58 by hoskim            #+#    #+#             */
-/*   Updated: 2024/12/26 19:00:41 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/05 17:34:52 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINITALK_H
 
 # define MINITALK_H
+# define _POSIX_C_SOURCE 200809L
 # include <stdio.h>
 # include <signal.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include "my_printf/src/ft_printf.h"
 
 // utils.h
 int	ft_atoi(const char *str);
