@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-char	**cvt_storage_allotator(char *msg)
+char	**bit_storage_allotator(char *msg)
 {
 	int		msg_len;
 	char	**cvt_storage;
@@ -20,14 +20,14 @@ char	**cvt_storage_allotator(char *msg)
 	return (cvt_storage);
 }
 
-char	**bit_coverter(char *msg)
+char	**convert_to_bits(char *msg)
 {
 	int		str_index;
 	int		bit_index;
 	int		char_in_ascii;
 	char	**cvt_storage;
 
-	cvt_storage = cvt_storage_allotator(msg);
+	cvt_storage = bit_storage_allotator(msg);
 	str_index = 0;
 	char_in_ascii = 0;
 	while (msg[str_index] != '\0')
@@ -51,7 +51,7 @@ char	**bit_coverter(char *msg)
 int	main(void)
 {
 	char	*str = "Hello.";
-	char	**result = bit_coverter(str);
+	char	**result = convert_to_bits(str);
 
 	for (int i = 0; result[i] != NULL; i++) {
         free(result[i]);

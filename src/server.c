@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 20:46:18 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/05 23:06:37 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/05 23:20:11 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ int	main(void)
 {
 	int	pid;
 
-	setup_signals();
-	pid = getpid();
+	setup_signals(); // sets up the signal handler
+	pid = getpid(); // gets the process id
 	ft_printf("\nServer is working. Please provide PID to client.\
 			\nPID: %d", pid);
 	while (1)
