@@ -18,6 +18,7 @@
 
 # define MINITALK_H
 # define _POSIX_C_SOURCE 200809L
+# define BUFFER_SIZE 8
 # include <stdio.h>
 # include <signal.h>
 # include <unistd.h>
