@@ -6,11 +6,12 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 20:12:25 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/06 20:12:28 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/08 20:04:28 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
+# include <unistd.h>
 // 비트로 변환된 문자열을 저장할 배열 할당.
 char	**bit_storage_allotator(char *msg)
 {

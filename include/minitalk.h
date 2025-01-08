@@ -5,12 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/24 19:01:58 by hoskim            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/01/05 17:34:52 by hoskim           ###   ########.fr       */
-=======
-/*   Updated: 2024/12/28 21:07:33 by hoskim           ###   ########.fr       */
->>>>>>> 44d29d31f16193e3944eee3eb0c57bc9dc3fa03f
+/*   Created: 2025/01/08 19:53:27 by hoskim            #+#    #+#             */
+/*   Updated: 2025/01/08 19:55:58 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +24,7 @@
 // utils.h
 int	ft_atoi(const char *str);
 int	ft_strlen(const char *s);
+
+void	signal_proccessor(int signal, siginfo_t *info, void *context);
 
 #endif
