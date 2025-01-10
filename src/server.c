@@ -6,12 +6,13 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 20:46:18 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/08 20:02:08 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/10 17:59:05 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 #include <signal.h>
+static char	*msg = NULL;
 
 // set up a signal handler to use sigaction()
 void	signal_setup(void)
@@ -27,8 +28,8 @@ void	signal_setup(void)
 	SA_SIGINFO: lets more params than just a signal number.
 	sa.sa_sigaction: passes signals to a func
 	sigaction(SIGUSR1, &sa, NULL): sets which signal the func takes
---------------------------------------------------------------------------------
-*/
+------------------------------------------------------------------------------*/
+
 // calculates each bit array to character.
 char	char_converter(int *bit_array)
 {
@@ -117,7 +118,6 @@ void	process_char(char character, siginfo_t *info)
 	static int	char_index;
 	static int	msg_size;
 	
-	msg = NULL;
 	if (msg == NULL)
 		allocate_memory(&msg, &msg_size, &char_index);
 	if (char_index + 1 >= msg_size)
@@ -153,11 +153,23 @@ void	signal_proccessor(int signal, siginfo_t *info, void *context)
 	}
 }
 
+void	handle_exit(int signal)
+{
+	if (msg != NULL)
+	{
+		free(msg);
+		msg = NULL;
+	}
+	exit(0);
+}
+
 int	main(void)
 {
 	int	pid;
 
 	signal_setup();
+	signal(SIGINT, handle_exit);
+	signal(SIGTERM, handle_exit);
 	pid = getpid(); // gets the process id
 	ft_printf("\nServer is working. Please provide PID to client.\
 			\nPID: %d\n", pid);
