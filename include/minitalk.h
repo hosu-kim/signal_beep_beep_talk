@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:53:27 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/10 20:42:13 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/11 18:34:38 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # define MAX_BIT_POSITION 8
 # include <stdio.h>
 # include <signal.h>
-# include <unistd.h>
 # include <stdlib.h>
 # include "my_printf/src/ft_printf.h"
 

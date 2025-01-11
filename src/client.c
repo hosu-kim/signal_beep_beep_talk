@@ -6,12 +6,12 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 20:12:25 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/08 20:04:28 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/11 21:37:12 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
-# include <unistd.h>
+#include <unistd.h>
 // 비트로 변환된 문자열을 저장할 배열 할당.
 char	**bit_storage_allotator(char *msg)
 {
@@ -34,7 +34,7 @@ char	**bit_storage_allotator(char *msg)
 		{ 
 			while (msg_index > 0)
 				free(bits_storage[--msg_index]);
-			free (bits_storage);
+			free(bits_storage);
 			return (NULL);
 		}
 		msg_index++;
@@ -81,14 +81,21 @@ void	send_message(int pid, char **bit_storage)
 		bit_index = 0;
 		while (bit_storage[str_index][bit_index]) // 변환된 각 문자의 비트를 하나씩 순회하는 동안
 		{
-			if (bit_storage[str_index][bit_index] == '1') // 순회하는 자리에 1을 찾으면 SIGUSR1을 보낸다.
+			if (bit_storage[str_index][bit_index] == '0')
 				kill(pid, SIGUSR1);
 			else
-				kill(pid, SIGUSR2); // 0을 찾으면 SIGUSR2를 보낸다.
+				kill(pid, SIGUSR2);
 			bit_index++;
 			usleep(100);
 		}
 		str_index++;
+		bit_index = 0;
+		while (bit_index < 8)
+		{
+			kill(pid, SIGUSR1);
+			bit_index++;
+			usleep(100);
+		}
 	}
 }
 
