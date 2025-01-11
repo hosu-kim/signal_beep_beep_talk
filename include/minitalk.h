@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:53:27 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/08 19:55:58 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/10 20:42:13 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 # define MINITALK_H
 # define _POSIX_C_SOURCE 200809L
-# define BUFFER_SIZE 8
+# define MAX_BIT_POSITION 8
 # include <stdio.h>
 # include <signal.h>
 # include <unistd.h>
