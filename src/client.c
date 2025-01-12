@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 20:12:25 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/12 01:03:51 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/12 01:08:55 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	send_message(int pid, char **bit_storage);
 int	main(int argc, char *argv[])
 {
 	int		pid_of_server;
-	int		index_in_str;
+	int		mem_free_index;
 	char	**bit_storage;
 
 	if (argc != 3)
@@ -43,9 +43,9 @@ int	main(int argc, char *argv[])
 	}
 	str_to_bits(argv[2], bit_storage);
 	send_message(pid_of_server, bit_storage);
-	index_in_str = 0;
-	while (bit_storage[index_in_str])
-		free(bit_storage[index_in_str++]);
+	mem_free_index = 0;
+	while (bit_storage[mem_free_index])
+		free(bit_storage[mem_free_index++]);
 	free(bit_storage);
 	return (0);
 }
