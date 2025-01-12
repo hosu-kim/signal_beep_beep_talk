@@ -6,22 +6,32 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 20:12:25 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/12 01:08:55 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/12 16:03:07 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
-#include <unistd.h>
 
 //````````````````````````````````PROTOTYPES````````````````````````````````````
+//`````main: use sub-functions to send signal and free memory```````````````````
 int		main(int argc, char *argv[]);
-//```````1st: make an appropriate storage for bits.`````````````````````````````
-char	**bit_storage_calculator(char *msg);-
-//```````2nd: convert string to bits and store them.````````````````````````````
+//`````1st: make an appropriate storage for bits.```````````````````````````````
+char	**bit_storage_calculator(char *msg);
+//`````2nd: convert string to bits and store them.``````````````````````````````
 void	**str_to_bits(char *msg, char **bits_storage);
-//```````3rd: send bits of message to server by signal.`````````````````````````
+//`````3rd: send bits of message to server by signal.```````````````````````````
 void	send_message(int pid, char **bit_storage);
 
+//______________________________________________________________________________
+/**
+ * @brief send message to server.
+ * @details
+ * STEP:
+ * 1. bit_sotrage_calculator
+ * 2. str_to_bits
+ * 3. send_message
+ * 4. free memory
+ */
 int	main(int argc, char *argv[])
 {
 	int		pid_of_server;
@@ -49,7 +59,18 @@ int	main(int argc, char *argv[])
 	free(bit_storage);
 	return (0);
 }
-
+//______________________________________________________________________________
+/**
+ * @brief 1st: make an appropriate storage for bits.
+ * @details
+ * 1. allocate memory in bits_storage for whole message.
+ * 2. allocate memory inside bits_storage for each character.
+ * 	(these steps are like making a whole folder and sub-folders for each char.)
+ * 3. return bits_storage.
+ * @note
+ * 1. allocate NULL at the end to indicate the end of the array.
+ * 	(the same as a string)
+ */
 char	**bit_storage_calculator(char *msg)
 {
 	int		msg_len;
@@ -76,7 +97,13 @@ char	**bit_storage_calculator(char *msg)
 	bits_storage[msg_len] = NULL;
 	return (bits_storage);
 }
-
+//______________________________________________________________________________
+/**
+ * @brief 2nd: break string into bits and store them.
+ * @details
+ * 1. convert each character into bits.
+ * 2. store them in bits_storage.
+ */
 void	**str_to_bits(char *msg, char **bits_storage)
 {
 	int		str_index;
@@ -100,34 +127,38 @@ void	**str_to_bits(char *msg, char **bits_storage)
 		str_index++;
 	}
 }
-
+//______________________________________________________________________________
+/**
+ * @brief 3rd: send bits of message to server by signal.
+ * @details
+ * 1. send bits of message to server by signal
+ * 2. send 00000000 to indicate of the end of message sending.
+ */
 void	send_message(int pid, char **bit_storage)
 {
-	int	str_index;
+	int	char_index;
 	int	bit_index;
 
-	str_index = 0;
-	while (bit_storage[str_index])
+	char_index = 0;
+	while (bit_storage[char_index])
 	{
 		bit_index = 0;
-		while (bit_storage[str_index][bit_index])
+		while (bit_storage[char_index][bit_index])
 		{
-			if (bit_storage[str_index][bit_index] == '0')
+			if (bit_storage[char_index][bit_index] == '0')
 				kill(pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
 			bit_index++;
 			usleep(100);
 		}
-		str_index++;
-		bit_index = 0;
-		while (bit_index < 8)
-		{
-			kill(pid, SIGUSR1);
-			bit_index++;
-			usleep(100);
-		}
+		char_index++;
+	}
+	bit_index = 0;
+	while (bit_index < 8)
+	{
+		kill(pid, SIGUSR1);
+		bit_index++;
+		usleep(100);
 	}
 }
-
-
