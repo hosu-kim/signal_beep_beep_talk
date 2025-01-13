@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 23:22:06 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/13 00:05:00 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/13 19:01:16 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	main(void)
 	write(1, "\nServer is running.\n", 21);
 	write(1, "Waiting for message...\n", 24);
 	write(1, "-----------------------------------------------------------", 60);
-	write(1, "\nServer's PID: ", 15);
+	write(1, "\nServer's PID: ", 16);
 	ft_putpid(server_pid);
 	write(1, "\n", 1);
 	signal(SIGUSR1, signal_handler);
