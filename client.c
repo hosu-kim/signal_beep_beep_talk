@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 23:03:41 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/12 23:53:27 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/13 20:39:50 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,25 @@ static int	ft_atoi(const char *str)
 
 static void	send_signal(pid_t pid, char *message)
 {
-	int		i;
-	int		j;
+	int		char_index;
+	int		bit_index;
 	char	result;
 
-	i = 0;
-	while (message[i] != '\0')
+	char_index = 0;
+	while (message[char_index] != '\0')
 	{
-		j = 7;
-		while (j >= 0)
+		bit_index = 7;
+		while (bit_index >= 0)
 		{
-			result = (message[i] >> j) & 1;
+			result = (message[char_index] >> bit_index) & 1;
 			if (result == 1)
 				kill(pid, SIGUSR1);
 			else if (result == 0)
 				kill(pid, SIGUSR2);
-			usleep(142);
-			j--;
+			usleep(100);
+			bit_index--;
 		}
-		i++;
+		char_index++;
 	}
 }
 
