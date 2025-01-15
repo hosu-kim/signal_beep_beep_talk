@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 23:03:41 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/13 20:39:50 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/15 22:45:08 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static int	ft_atoi(const char *str)
 
 	i = 0;
 	sign = 1;
+	result = 0;
 	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
 		i++;
 	if (str[i] == '-' || str[i] == '+')
@@ -52,12 +53,19 @@ static void	send_signal(pid_t pid, char *message)
 			result = (message[char_index] >> bit_index) & 1;
 			if (result == 1)
 				kill(pid, SIGUSR1);
-			else if (result == 0)
+			else
 				kill(pid, SIGUSR2);
 			usleep(100);
 			bit_index--;
 		}
 		char_index++;
+	}
+	bit_index = 7;
+	while (bit_index >= 0)
+	{
+		kill(pid, SIGUSR2);
+		usleep(100);
+		bit_index--;
 	}
 }
 
@@ -65,12 +73,12 @@ int	main(int argc, char *argv[])
 {
 	pid_t	server_pid;
 
-	if (argc == 3)
+	if (argc != 3)
 	{
-		server_pid = ft_atoi(argv[1]);
-		send_signal(server_pid, argv[2]);
+		write(1, "The requested number of arguments was not entered.\n", 50);
+		write(1, "Usage: ./clien [PID] [message]\n", 31);
 	}
-	else
-		write(1, "The requested number of arguments was not entered", 50);
+	server_pid = ft_atoi(argv[1]);
+	send_signal(server_pid, argv[2]);
 	return (0);
 }
