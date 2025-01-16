@@ -5,42 +5,38 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/12 23:03:41 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/16 01:16:21 by hoskim           ###   ########.fr       */
+/*   Created: 2025/01/16 16:58:31 by hoskim            #+#    #+#             */
+/*   Updated: 2025/01/16 17:08:31 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
-
-static int	ft_atoi(const char *str)
+static void	ft_send_bit(pid_t pid, char input)
 {
-	int	i;
-	int	sign;
-	int	result;
+	int	bit;
 
-	i = 0;
-	sign = 1;
-	result = 0;
-	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
-		i++;
-	if (str[i] == '-' || str[i] == '+')
+	bit = 0;
+	while (bit < 8)
+
 	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
+		if ((input & (1 << bit)) != 0)
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		usleep(100);
+		bit++;
 	}
-	result = 0;
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		result = (result * 10) + (str[i] - 48);
-		i++;
-	}
-	return (sign * result);
 }
 
-static void	send_signal(pid_t pid, char , 31);
+static void	ft_send_str(pid_t pid, char input[])
+{
+	int	i;
+
+	i = 0;
+	while (input[i] != '\0')
+	{
+		ft_send_bit(pid, input[i]);
+		i++;
 	}
-	server_pid = ft_atoi(argv[1]);
-	send_signal(server_pid, argv[2]);
-	return (0);
+	ft_send_bit(pid, '\n');
+	ft_send_bit(pid, '\0');
 }
