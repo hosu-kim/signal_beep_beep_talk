@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 23:03:41 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/15 22:45:08 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/16 01:16:21 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,45 +38,7 @@ static int	ft_atoi(const char *str)
 	return (sign * result);
 }
 
-static void	send_signal(pid_t pid, char *message)
-{
-	int		char_index;
-	int		bit_index;
-	char	result;
-
-	char_index = 0;
-	while (message[char_index] != '\0')
-	{
-		bit_index = 7;
-		while (bit_index >= 0)
-		{
-			result = (message[char_index] >> bit_index) & 1;
-			if (result == 1)
-				kill(pid, SIGUSR1);
-			else
-				kill(pid, SIGUSR2);
-			usleep(100);
-			bit_index--;
-		}
-		char_index++;
-	}
-	bit_index = 7;
-	while (bit_index >= 0)
-	{
-		kill(pid, SIGUSR2);
-		usleep(100);
-		bit_index--;
-	}
-}
-
-int	main(int argc, char *argv[])
-{
-	pid_t	server_pid;
-
-	if (argc != 3)
-	{
-		write(1, "The requested number of arguments was not entered.\n", 50);
-		write(1, "Usage: ./clien [PID] [message]\n", 31);
+static void	send_signal(pid_t pid, char , 31);
 	}
 	server_pid = ft_atoi(argv[1]);
 	send_signal(server_pid, argv[2]);
