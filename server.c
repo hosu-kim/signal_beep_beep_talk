@@ -5,57 +5,51 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/12 23:03:41 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/16 01:20:56 by hoskim           ###   ########.fr       */
+/*   Created: 2025/01/16 17:34:49 by hoskim            #+#    #+#             */
+/*   Updated: 2025/01/16 17:34:49 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
-
-static void	ft_putchar(char c)
+static void	ft_handler(int signal)
 {
-	write(1, &c, 1);
-}
+	static int	bit;
+	static char	tmp;
 
-static void	ft_putnbr(int n)
-{
-	if (n < 0)
-	{
-		ft_putchar('-');
-		n = -n;
-	}
-	if (n >= 10)
-		ft_putnbr(n / 10);
-	ft_putchar((n % 10) + '0');
-}
-
-static void	handle_signal(int sig)
-{
-	static int	bit = 0;
-	static char	c = 0;
-
-	c |= (sig == SIGUSR1) << bit;
+	if (signal == SIGUSR1)
+		tmp |= (1 << bit);
 	bit++;
 	if (bit == 8)
 	{
-		ft_putchar(c);
+		ft_putchar_fd(tmp, 1);
 		bit = 0;
-		c = 0;
+		tmp = 0;
 	}
 }
 
-int main(void)
+static void ft_pid_print(pid_t pid)
 {
-    struct sigaction sa;
+	ft_putstr_fd("Hi, this is my PID: ", 1);
+	ft_putnbr_fd(pid, 1);
+	ft_putchar_fd('\n, 1');
+	ft_putstr_fd("I'm waiting for a message...\n", 1);
+}
 
-    sa.sa_handler = handle_signal;
-    sa.sa_flags = 0;
-    sigemptyset(&sa.sa_mask);
-    sigaction(SIGUSR1, &sa, NULL);
-    sigaction(SIGUSR2, &sa, NULL);
-    ft_putnbr(getpid());
-    ft_putchar('\n');
-    while (1)
-        pause();
-    return (0);
+int	main(int argc, char **argv)
+{
+	pid_t	pid;
+
+	(void)argv;
+	if (argc != 1)
+	{
+		ft_putstr_fd("Error: wrong format.\n", 1);
+		ft_putstr_fd("Try: ./server\n", 1);
+		return (0);
+	}
+	pid = getpid();
+	ft_pid_print(pid);
+	signal(SIGUSR1, ft_handler);
+	signal(SIGUSR2, ft_handler);
+	while (argc == 1)
+		pause();
+	return (0);
 }

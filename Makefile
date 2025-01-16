@@ -1,35 +1,48 @@
-NAME = minitalk
-SERVER = server
-CLIENT = client
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-RM = rm -rf
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/01/16 17:44:04 by hoskim            #+#    #+#              #
+#    Updated: 2025/01/16 17:44:04 by hoskim           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-SRCS_SERVER = server.c
-SECS_CLIENT = client.c
-OBJS_SERVER = $(SRCS_SERVER:.c=.o)
-OBJS_CLIENT = $(SRCS_CLIENT:.c=.o)
-HEADER = minitalk.h
+NAME		= minitalk
+SERVER		= server
+CLIENT		= client
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror
+RM			= rm -f
 
-all: $(NAME)
+SRCS_SERVER	= server.c utils.c
+SRCS_CLIENT	= client.c utils.c
+OBJS_SERVER	= $(SRCS_SERVER:.c=.o)
+OBJS_CLIENT	= $(SRCS_CLIENT:.c=.o)
 
-$(NAME): $(SERVER) $(CLIENT)
+HEADER		= minitalk.h
 
-%.o: %.c $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@
+all:		$(NAME)
 
-$(SERVER): $(OBJS_SERVER)
-	$(CC) $(CFLAGS) $(OBJS_SERVER) -o $(SERVER)
+$(NAME):	$(SERVER) $(CLIENT)
 
-$(CLIENT): $(OBJS_CLIENT)
-	$(CC) $(CFLAGS) $(OBJS_CLIENT) -o $(CLIENT)
+$(SERVER):	$(OBJS_SERVER)
+			$(CC) $(CFLAGS) $(OBJS_SERVER) -o $(SERVER)
+
+$(CLIENT):	$(OBJS_CLIENT)
+			$(CC) $(CFLAGS) $(OBJS_CLIENT) -o $(CLIENT)
+
+%.o: %.c	$(HEADER)
+			$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJS_SERVER) $(OBJS_CLIENT)
+			$(RM) $(OBJS_SERVER) $(OBJS_CLIENT)
 
-fclean: clean
-	$(RM) $(SERVER) $(CLIENT)
+fclean:		clean
+			$(RM) $(SERVER) $(CLIENT)
 
-re: fclean all
+re:			fclean all
 
-.PHONY: all clean fclean re
+.PHONY:		all clean fclean re
