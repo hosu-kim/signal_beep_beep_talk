@@ -13,9 +13,10 @@
 #ifndef MINITALK_H
 # define MINITALK_H
 
+# include <sys/types.h>
+# include <signal.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include <signal.h>
 
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);

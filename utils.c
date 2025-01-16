@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minitalk.h"
+
 void	ft_putchar_fd(char c, int fd)
 {
 	write(fd, &c, 1);
@@ -43,7 +45,7 @@ void	ft_putnbr_fd(int n, int fd)
 	{
 		write(fd, "-", 1);
 		c = '0' - n % 10;
-		rec_putnbr(-(n /10), fd);
+		rec_putnbr(-(n / 10), fd);
 	}
 	else
 	{

@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minitalk.h"
+
 static void	ft_send_bit(pid_t pid, char input)
 {
 	int	bit;
