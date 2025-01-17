@@ -1,98 +1,97 @@
-#include "../include/minitalk.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/17 21:29:25 by hoskim            #+#    #+#             */
+/*   Updated: 2025/01/17 21:29:25 by hoskim           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#define INITIAL_SIZE 10000
-#define GROWTH_FACTOR 2
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hosu-kim <hosu-kim@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/17 20:28:44 by hosu-kim          #+#    #+#             */
+/*   Updated: 2025/01/17 20:28:44 by hosu-kim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static unsigned char	g_char = 0;
-static int			g_bit_count = 0;
-static int			g_str_index = 0;
-static int			g_str_capacity = INITIAL_SIZE;
-static char			*g_str = NULL;
+#include "minitalk.h"
 
-void	reset_char(void)
+void	ft_putchar(char c)
 {
-    g_char = 0;
-    g_bit_count = 0;
+	write(1, &c, 1);
 }
 
-int	grow_buffer(void)
+void	ft_putstr(char *str)
 {
-    char	*new_str;
-    int		new_capacity;
-    int		i;
-
-    new_capacity = g_str_capacity * GROWTH_FACTOR;
-    new_str = (char *)malloc(new_capacity);
-    if (!new_str)
-        return (0);
-    if (g_str)
-    {
-        i = 0;
-        while (i < g_str_index)
-        {
-            new_str[i] = g_str[i];
-            i++;
-        }
-        free(g_str);
-    }
-    g_str = new_str;
-    g_str_capacity = new_capacity;
-    return (1);
+	while (*str)
+		write(1, str++, 1);
 }
 
-void	signal_handler(int signum)
+void	ft_putnbr(int n)
 {
-    g_char = g_char << 1;
-    if (signum == SIGUSR2)
-        g_char = g_char | 1;
-    g_bit_count++;
+	if (n >= 10)
+		ft_putnbr(n / 10);
+	ft_putchar(n % 10 + '0');
+}
 
-    if (g_bit_count == 8)
-    {
-        if (g_str_index >= g_str_capacity - 1)
-        {
-            if (!grow_buffer())
-            {
-                write(2, "Error: Memory allocation failed\n", 31);
-                return ;
-            }
-        }
-        g_str[g_str_index++] = g_char;
-        if (g_char == '\0')
-        {
-            write(1, g_str, g_str_index - 1);
-            write(1, "\n", 1);
-            g_str_index = 0;
-        }
-        reset_char();
-    }
+static void	handle_signal(int signum, siginfo_t *info, void *context)
+{
+	static int		bit = 0;
+	static int		i = 0;
+	static char		str[10000];
+
+	(void)context;
+	if (signum == SIGUSR1)
+		str[i] |= (1 << bit);
+	bit++;
+	if (bit == 8)
+	{
+		if (str[i] == '\0')
+		{
+			ft_putstr(str);
+			ft_putchar('\n');
+			i = 0;
+			bit = 0;
+			ft_memset(str, 0, sizeof(str));
+		}
+		else
+		{
+			bit = 0;
+			i++;
+		}
+	}
+	if (kill(info->si_pid, SIGUSR2) == -1)
+	{
+		ft_putstr("Error: Failed to send acknowledgment signal\n");
+		exit(1);
+	}
 }
 
 int	main(void)
 {
-    struct sigaction	sa;
+	struct sigaction	sa;
 
-    g_str = (char *)malloc(INITIAL_SIZE);
-    if (!g_str)
-    {
-        write(2, "Error: Initial memory allocation failed\n", 38);
-        return (1);
-    }
-
-    sa.sa_handler = signal_handler;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    printf("Server PID: %d\n", getpid());
-
-    if (sigaction(SIGUSR1, &sa, NULL) == -1 ||
-        sigaction(SIGUSR2, &sa, NULL) == -1)
-    {
-        write(2, "Error: sigaction failed\n", 23);
-        free(g_str);
-        return (1);
-    }
-    while (1)
-        pause();
-    free(g_str);
-    return (0);
+	ft_putstr("Server PID: ");
+	ft_putnbr(getpid());
+	ft_putchar('\n');
+	sa.sa_sigaction = handle_signal;
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1 || \
+		sigaction(SIGUSR2, &sa, NULL) == -1)
+	{
+		ft_putstr("Error: Failed to set up signal handlers\n");
+		return (1);
+	}
+	while (1)
+		pause();
+	return (0);
 }
