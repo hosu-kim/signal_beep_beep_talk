@@ -5,37 +5,51 @@
 #                                                     +:+ +:+         +:+      #
 #    By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/01/18 01:52:04 by hoskim            #+#    #+#              #
-#    Updated: 2025/01/18 01:57:43 by hoskim           ###   ########.fr        #
+#    Created: 2025/01/18 16:35:55 by hoskim            #+#    #+#              #
+#    Updated: 2025/01/18 16:58:16 by hoskim           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = server client
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/01/18 15:35:19 by hoskim            #+#    #+#             #
+#    Updated: 2025/01/18 15:35:19 by hoskim           ###   ########.fr       #
+#                                                                              #
+# **************************************************************************** #
+
+CLIENT = client
+SERVER = server
+
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS_SERVER = server.c utils.c
-SRCS_CLIENT = client.c utils.c
+SRC_CLIENT = src/client.c src/utils.c
+SRC_SERVER = src/server.c src/utils.c
 
-OBJS_SERVER = $(SRCS_SERVER:.c=.o)
-OBJS_CLIENT = $(SRCS_CLIENT:.c=.o)
+OBJ_CLIENT = $(SRC_CLIENT:.c=.o)
+OBJ_SERVER = $(SRC_SERVER:.c=.o)
 
-all: $(NAME)
+all: $(CLIENT) $(SERVER)
 
-server: $(OBJS_SERVER)
-	$(CC) $(CFLAGS) -o server $(OBJS_SERVER)
+$(CLIENT): $(OBJ_CLIENT)
+	$(CC) $(CFLAGS) $(OBJ_CLIENT) -o $(CLIENT)
 
-client: $(OBJS_CLIENT)
-	$(CC) $(CFLAGS) -o client $(OBJS_CLIENT)
+$(SERVER): $(OBJ_SERVER)
+	$(CC) $(CFLAGS) $(OBJ_SERVER) -o $(SERVER)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS_SERVER) $(OBJS_CLIENT)
+	rm -f $(OBJ_CLIENT) $(OBJ_SERVER)
 
 fclean: clean
-	rm -f server client
+	rm -f $(CLIENT) $(SERVER)
 
 re: fclean all
 

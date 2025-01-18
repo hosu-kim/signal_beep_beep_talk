@@ -12,10 +12,12 @@
 
 #ifndef MINITALK_H
 # define MINITALK_H
+# define _XOPEN_SOURCE 700 // 불완전한 형식 "struct sigaction"은(는) 허용되지 않음
 
-# include <signal.h>
-# include <unistd.h>
+# include <unistd.h> // write, getpid 등
+# include <signal.h> // sigaction 구조체, signal 관련 함수들
 # include <stdlib.h>
+# include <sys/types.h> // pid_t
 
 # define BUFFER_SIZE 10000
 
