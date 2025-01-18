@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 16:14:32 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/18 20:58:20 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/18 23:51:55 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ void	send_char(pid_t server_pid, char c)
 
 void	send_string(pid_t server_pid, char *str)
 {
-	int	i;
+	int	char_index;
 
-	i = 0;
-	while (str[i])
+	char_index = 0;
+	while (str[char_index])
 	{
-		send_char(server_pid, str[i]);
-		i++;
+		send_char(server_pid, str[char_index]);
+		char_index++;
 	}
 	send_char(server_pid, '\0');
 }
@@ -61,3 +61,4 @@ int	main(int argc, char **argv)
 	send_string(server_pid, argv[2]);
 	return (0);
 }
+
