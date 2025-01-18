@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: hosu-kim <hosu-kim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/18 16:14:44 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/18 16:29:16 by hoskim           ###   ########.fr       */
+/*   Created: 2025/01/18 18:42:30 by hosu-kim          #+#    #+#            */
+/*   Updated: 2025/01/18 18:42:30 by hosu-kim         ###   ########.fr     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,15 @@ void	ft_putchar(char c)
 	write(1, &c, 1);
 }
 
-void	ft_putstr(char *str)
+void	ft_putstr(char *s)
 {
-	while (*str)
-		write(1, str++, 1);
+	int	i;
+
+	if (!s)
+		return ;
+	i = 0;
+	while (s[i])
+		ft_putchar(s[i++]);
 }
 
 void	ft_putnbr(int n)
@@ -38,4 +43,35 @@ void	ft_putnbr(int n)
 	if (n >= 10)
 		ft_putnbr(n / 10);
 	ft_putchar((n % 10) + '0');
+}
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	unsigned char	*ptr;
+	size_t			i;
+
+	ptr = (unsigned char *)s;
+	i = 0;
+	while (i < n)
+		ptr[i++] = (unsigned char)c;
+	return (s);
+}
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	unsigned char		*d;
+	const unsigned char	*s;
+	size_t				i;
+
+	if (!dest && !src)
+		return (NULL);
+	d = (unsigned char *)dest;
+	s = (const unsigned char *)src;
+	i = 0;
+	while (i < n)
+	{
+		d[i] = s[i];
+		i++;
+	}
+	return (dest);
 }

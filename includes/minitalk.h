@@ -12,23 +12,33 @@
 
 #ifndef MINITALK_H
 # define MINITALK_H
-# define _XOPEN_SOURCE 700 // 불완전한 형식 "struct sigaction"은(는) 허용되지 않음
+# define _XOPEN_SOURCE 200 // 불완전한 형식 "struct sigaction"은(는) 허용되지 않음
+# define _DEFAULT_SOURCE // ulseep()
 
 # include <unistd.h> // write, getpid 등
 # include <signal.h> // sigaction 구조체, signal 관련 함수들
 # include <stdlib.h>
 # include <sys/types.h> // pid_t
 
-# define BUFFER_SIZE 10000
+# define INITIAL_BUFFER_SIZE 4096
+# define MAX_BUFFER_SIZE 4194304
 
 typedef struct s_data
 {
-	char	message[BUFFER_SIZE];
-	int		current_bit;
-	int		current_byte;
+	char	*message;
+	size_t	buffer_size;
+	size_t	current_bit;
+	size_t	current_byte;
 }	t_data;
 
+// 전역 변수 선언
+extern t_data	g_data;
+
+// 필수 함수 선언
 void	ft_putchar(char c);
-void	ft_putstr(char *str);
+void	ft_putstr(char *s);
 void	ft_putnbr(int n);
+void	*ft_memset(void *s, int c, size_t n);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+
 #endif
