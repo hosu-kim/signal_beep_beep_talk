@@ -20,8 +20,8 @@
 # include <stdlib.h>
 # include <sys/types.h> // pid_t
 
-# define INITIAL_BUFFER_SIZE 4096
-# define MAX_BUFFER_SIZE 4194304
+# define INITIAL_BUFFER_SIZE 1024
+# define MAX_BUFFER_SIZE 2097152 // 2MB
 
 typedef struct s_data
 {
@@ -35,10 +35,10 @@ typedef struct s_data
 extern t_data	g_data;
 
 // 필수 함수 선언
-void	ft_putchar(char c);
 void	ft_putstr(char *s);
 void	ft_putnbr(int n);
 void	*ft_memset(void *s, int c, size_t n);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
+int		ft_atoi(const char *str);
 
 #endif

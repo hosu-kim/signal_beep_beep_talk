@@ -12,11 +12,6 @@
 
 #include "../includes/minitalk.h"
 
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
-
 void	ft_putstr(char *s)
 {
 	int	i;
@@ -25,11 +20,13 @@ void	ft_putstr(char *s)
 		return ;
 	i = 0;
 	while (s[i])
-		ft_putchar(s[i++]);
+		write(1, &s[i++], 1);
 }
 
 void	ft_putnbr(int n)
 {
+	char	c;
+
 	if (n == -2147483648)
 	{
 		ft_putstr("-2147483648");
@@ -37,14 +34,16 @@ void	ft_putnbr(int n)
 	}
 	if (n < 0)
 	{
-		ft_putchar('-');
+		write(1, "-", 1);
 		n = -n;
 	}
 	if (n >= 10)
 		ft_putnbr(n / 10);
-	ft_putchar((n % 10) + '0');
+	c = (n % 10) + '0';
+	write(1, &c, 1);
 }
 
+// initialies a block of memory with a specified value.
 void	*ft_memset(void *s, int c, size_t n)
 {
 	unsigned char	*ptr;
@@ -74,4 +73,31 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		i++;
 	}
 	return (dest);
+}
+
+int	ft_atoi(const char *str)
+{
+	int	result;
+	int	sign;
+
+	result = 0;
+	sign = 1;
+	while (*str == '\n' || *str == '\t' || *str == '\r' || \
+			*str == '\v' || *str == '\f' || *str == ' ')
+		str++;
+	if (*str == '-')
+	{
+		sign = -1;
+		str++;
+	}
+	else if (*str == '+')
+	{
+		str++;
+	}
+	while ('0' <= *str && *str <= '9')
+	{
+		result = result * 10 + (*str - '0');
+		str++;
+	}
+	return (sign * result);
 }
