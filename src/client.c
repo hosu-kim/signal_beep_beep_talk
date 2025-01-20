@@ -6,12 +6,13 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 16:14:32 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/19 19:52:18 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/20 21:43:13 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minitalk.h"
 
+// I will sen
 void	send_char(pid_t server_pid, char c)
 {
 	int	bit;
@@ -25,7 +26,7 @@ void	send_char(pid_t server_pid, char c)
 			kill(server_pid, SIGUSR1);
 		else
 			kill(server_pid, SIGUSR2);
-		usleep(500);
+		usleep(300);
 		bit_index++;
 	}
 }

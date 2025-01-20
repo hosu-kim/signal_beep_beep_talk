@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/19 17:25:44 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/19 19:52:31 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/20 22:16:48 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 t_data	g_data = {NULL, 0, 0, 0};
 
+// I will clean all data in your structure for the next message.
 static void	cleanup(void)
 {
 	if (g_data.message)
@@ -24,6 +25,11 @@ static void	cleanup(void)
 	g_data.current_byte = 0;
 }
 
+/**
+ * @brief I will double the buffer of the message storage if necessry.
+ * @details
+ * -return value "1" indicates the function has terminated successfully.
+ */
 static int	manage_buffer(void)
 {
 	char	*new_buffer;
@@ -53,6 +59,8 @@ static int	manage_buffer(void)
 	return (1);
 }
 
+/// @brief I will check if seding a message has done or not and print it.
+/// @param  
 static void	process_byte(void)
 {
 	if (g_data.current_bit != 8)
