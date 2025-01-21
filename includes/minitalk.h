@@ -28,7 +28,7 @@ typedef struct s_data
 	char	*message;
 	size_t	buffer_size;
 	size_t	current_bit;
-	size_t	current_byte;
+	size_t	current_character;
 }	t_data;
 
 // 전역 변수 선언
