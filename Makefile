@@ -3,22 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/01/18 16:35:55 by hoskim            #+#    #+#              #
-#    Updated: 2025/01/18 16:58:16 by hoskim           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
 #    By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/18 15:35:19 by hoskim            #+#    #+#             #
-#    Updated: 2025/01/18 15:35:19 by hoskim           ###   ########.fr       #
+#    Updated: 2025/01/21 18:28:05 by hoskim           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,10 +14,10 @@ CLIENT = client
 SERVER = server
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror 
 
 SRC_CLIENT = src/client.c src/utils.c
-SRC_SERVER = src/server.c src/utils.c
+SRC_SERVER = src/server.c src/utils.c src/server_utils.c
 
 OBJ_CLIENT = $(SRC_CLIENT:.c=.o)
 OBJ_SERVER = $(SRC_SERVER:.c=.o)

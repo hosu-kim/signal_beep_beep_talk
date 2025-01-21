@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/19 17:25:44 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/21 14:57:17 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/21 21:04:38 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_data	g_data = {NULL, 0, 0, 0};
 
 // I will clean all data in your structure for the next message.
-static void	cleanup(void)
+void	cleanup(void)
 {
 	if (g_data.message)
 		free(g_data.message);
@@ -81,7 +81,7 @@ static void	process_byte(void)
 	}
 }
 
-static void	handle_signal(int signum, siginfo_t *info, void *context)
+void	handle_signal(int signum, siginfo_t *info, void *context)
 {
 	(void)context;
 	(void)info;
@@ -105,13 +105,6 @@ static void	handle_signal(int signum, siginfo_t *info, void *context)
 
 int	main(void)
 {
-	struct sigaction	sa;
-
-	sa.sa_sigaction = handle_signal;
-	sa.sa_flags = SA_SIGINFO | SA_RESTART;
-	sigemptyset(&sa.sa_mask);
-	sigaddset(&sa.sa_mask, SIGUSR1);
-	sigaddset(&sa.sa_mask, SIGUSR2);
 	if (!setup_new_storage())
 	{
 		cleanup();
@@ -120,14 +113,12 @@ int	main(void)
 	write(1, "Server PID: ", 12);
 	ft_putnbr(getpid());
 	write(1, "\n", 1);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1 || \
-		sigaction(SIGUSR2, &sa, NULL) == -1)
+	if (!initialize_signal_handlers())
 	{
 		cleanup();
 		return (1);
 	}
 	while (1)
 		pause();
-	cleanup();
 	return (0);
 }

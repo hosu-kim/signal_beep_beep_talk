@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/18 00:57:31 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/18 00:57:31 by hoskim           ###   ########.fr       */
+/*   Created: 2025/01/21 19:55:14 by hoskim            #+#    #+#             */
+/*   Updated: 2025/01/21 19:55:14 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,19 @@
 # define INITIAL_BUFFER_SIZE 1024
 # define MAX_BUFFER_SIZE 2097152 // 2MB
 
+// 필수 함수 선언
+void		ft_putstr(char *s);
+void		ft_putnbr(int n);
+void		*ft_memset(void *s, int c, size_t n);
+void		*ft_memcpy(void *dest, const void *src, size_t n);
+int			ft_atoi(const char *str);
+
+// Server functions
+void		handle_exit_signal(int signum);
+void		handle_signal(int signum, siginfo_t *info, void *context);
+int			initialize_signal_handlers(void);
+void		cleanup(void);
+
 typedef struct s_data
 {
 	char	*message;
@@ -33,12 +46,5 @@ typedef struct s_data
 
 // 전역 변수 선언
 extern t_data	g_data;
-
-// 필수 함수 선언
-void	ft_putstr(char *s);
-void	ft_putnbr(int n);
-void	*ft_memset(void *s, int c, size_t n);
-void	*ft_memcpy(void *dest, const void *src, size_t n);
-int		ft_atoi(const char *str);
 
 #endif

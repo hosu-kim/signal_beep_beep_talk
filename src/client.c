@@ -5,14 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/18 16:14:32 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/21 04:17:37 by hoskim           ###   ########.fr       */
+/*   Created: 2025/01/21 20:43:08 by hoskim            #+#    #+#             */
+/*   Updated: 2025/01/21 21:01:18 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minitalk.h"
 
-// I will sen
 void	send_char(pid_t server_pid, char c, int bit_index)
 {
 	if (bit_index < 8)
@@ -21,7 +20,7 @@ void	send_char(pid_t server_pid, char c, int bit_index)
 			kill(server_pid, SIGUSR1);
 		else
 			kill(server_pid, SIGUSR2);
-		usleep(100);
+		usleep(300);
 		send_char(server_pid, c, bit_index + 1);
 	}
 }
