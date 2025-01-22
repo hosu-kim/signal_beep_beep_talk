@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 20:43:08 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/21 21:01:18 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/22 11:37:24 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	send_char(pid_t server_pid, char c, int bit_index)
 			kill(server_pid, SIGUSR1);
 		else
 			kill(server_pid, SIGUSR2);
-		usleep(300);
+		usleep(700);
 		send_char(server_pid, c, bit_index + 1);
 	}
 }
