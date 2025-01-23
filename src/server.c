@@ -6,7 +6,7 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/19 17:25:44 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/21 21:04:38 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/01/23 19:00:05 by hoskim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,100 +14,110 @@
 
 t_data	g_data = {NULL, 0, 0, 0};
 
-// I will clean all data in your structure for the next message.
-void	cleanup(void)
+// initialize all members to NULL and 0 in g_data.
+void	reset_global_data(void)
 {
 	if (g_data.message)
 		free(g_data.message);
 	g_data.message = NULL;
-	g_data.buffer_size = 0;
-	g_data.current_bit = 0;
-	g_data.current_character = 0;
+	g_data.current_buffer_size = 0;
+	g_data.bit_position = 0;
+	g_data.char_index = 0;
 }
 
 /**
- * @brief I'll double the buffer of the message storage if necessry.
- * @details
- * -return value "1" indicates the function has terminated successfully.
+ * @brief It sets a sufficient buffer size to save the message.
+ * @details return value 1 indicates the function has terminated successfully.
  */
-static int	setup_new_storage(void)
+static int	resize_message_buffer(void)
 {
-	char	*new_buffer;
-	size_t	new_size;
+	char	*buffer_for_update;
+	size_t	buffer_size_to_set;
 
-	if (!g_data.message)
-		new_size = INITIAL_BUFFER_SIZE;
+	if (g_data.message == NULL)
+		buffer_size_to_set = INITIAL_BUFFER_SIZE;
 	else
 	{
-		new_size = g_data.buffer_size * 2;
-		if (new_size > MAX_BUFFER_SIZE)
-			new_size = MAX_BUFFER_SIZE;
-		if (new_size == g_data.buffer_size)
+		buffer_size_to_set = g_data.current_buffer_size * 2;
+		if (buffer_size_to_set > MAX_BUFFER_SIZE)
+			buffer_size_to_set = MAX_BUFFER_SIZE;
+		if (buffer_size_to_set == g_data.current_buffer_size)
 			return (0);
 	}
-	new_buffer = (char *)malloc(new_size);
-	if (!new_buffer)
+	buffer_for_update = (char *)malloc(buffer_size_to_set);
+	if (!buffer_for_update)
 		return (0);
-	ft_memset(new_buffer, 0, new_size);
+	ft_memset(buffer_for_update, 0, buffer_size_to_set);
 	if (g_data.message)
 	{
-		ft_memcpy(new_buffer, g_data.message, g_data.current_character);
+		ft_memcpy(buffer_for_update, g_data.message, g_data.char_index);
 		free(g_data.message);
 	}
-	g_data.message = new_buffer;
-	g_data.buffer_size = new_size;
+	g_data.message = buffer_for_update;
+	g_data.current_buffer_size = buffer_size_to_set;
 	return (1);
 }
 
-/// @brief I'll check if seding has ended or not and print it.
-/// @note g_data.message[g_data.current_character] = 0; '\0' == 0 in ascii
-static void	process_byte(void)
+/** @brief If Null character is detected, it prints the completed string,
+ *	       or if more data remains, continues to build the completed string.
+ 
+ *  @note g_data.message[g_data.current_character] = 0; '\0' == 0 in ascii
+ */		
+static void	process_completed_str(void)
 {
-	if (g_data.current_bit != 8)
+	if (g_data.bit_position != 8)
 		return ;
-	g_data.current_bit = 0;
-	if (g_data.message[g_data.current_character] == '\0')
+	g_data.bit_position = 0;
+	if (g_data.message[g_data.char_index] == '\0')
 	{
-		write(1, g_data.message, g_data.current_character);
+		write(1, g_data.message, g_data.char_index);
 		write(1, "\n", 1);
-		cleanup();
-		setup_new_storage();
+		reset_global_data();
+		resize_message_buffer();
 	}
 	else
 	{
-		g_data.current_character++;
-		if (g_data.current_character < g_data.buffer_size)
-			g_data.message[g_data.current_character] = '\0';
+		g_data.char_index++;
+		if (g_data.char_index >= g_data.current_buffer_size)
+		{
+			if (!resize_message_buffer())
+				exit(EXIT_FAILURE);
+		}
+		if (g_data.char_index < g_data.current_buffer_size)
+			g_data.message[g_data.char_index] = '\0';
 	}
 }
 
-void	handle_signal(int signum, siginfo_t *info, void *context)
+/**
+ * @brief  it converts signals to char and stores the message buffer
+ */
+void	signal_to_char(int signum, siginfo_t *info, void *context)
 {
 	(void)context;
 	(void)info;
-	if (!g_data.message && !setup_new_storage())
+	if (!g_data.message && !resize_message_buffer())
 		return ;
-	if (g_data.current_character >= g_data.buffer_size - 1)
+	if (g_data.char_index >= g_data.current_buffer_size - 1)
 	{
-		if (!setup_new_storage())
+		if (!resize_message_buffer())
 		{
-			ft_putstr("\nBuffer is full. :/\n");
+			ft_putstr("\nBuffer is full... :/\n");
 			return ;
 		}
 	}
 	if (signum == SIGUSR1)
-		g_data.message[g_data.current_character] |= (1 << g_data.current_bit);
+		g_data.message[g_data.char_index] |= (1 << g_data.bit_position);
 	else if (signum == SIGUSR2)
-		g_data.message[g_data.current_character] &= ~(1 << g_data.current_bit);
-	g_data.current_bit++;
-	process_byte();
+		g_data.message[g_data.char_index] &= ~(1 << g_data.bit_position);
+	g_data.bit_position++;
+	process_completed_str();
 }
 
 int	main(void)
 {
-	if (!setup_new_storage())
+	if (!resize_message_buffer())
 	{
-		cleanup();
+		reset_global_data();
 		return (1);
 	}
 	write(1, "Server PID: ", 12);
@@ -115,7 +125,7 @@ int	main(void)
 	write(1, "\n", 1);
 	if (!initialize_signal_handlers())
 	{
-		cleanup();
+		reset_global_data();
 		return (1);
 	}
 	while (1)

@@ -32,16 +32,16 @@ int			ft_atoi(const char *str);
 
 // Server functions
 void		handle_exit_signal(int signum);
-void		handle_signal(int signum, siginfo_t *info, void *context);
+void		signal_to_char(int signum, siginfo_t *info, void *context);
 int			initialize_signal_handlers(void);
-void		cleanup(void);
+void		reset_global_data(void);
 
 typedef struct s_data
 {
 	char	*message;
-	size_t	buffer_size;
-	size_t	current_bit;
-	size_t	current_character;
+	size_t	current_buffer_size;
+	size_t	bit_position;
+	size_t	char_index;
 }	t_data;
 
 // 전역 변수 선언
