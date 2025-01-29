@@ -63,4 +63,4 @@ The server uses these signals to build the message character by character.
 - The server dynamically resizes the buffer to accommodate the incoming message.
 - The server handles buffer overflow by printing an error message if the buffer is full.
 ## License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
