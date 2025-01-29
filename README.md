@@ -1,1 +1,1 @@
-![Logo](images/logo.webp)
+<img src="images/logo.webp" width="400">
