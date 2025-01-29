@@ -1,4 +1,6 @@
-<img src="images/logo.webp" width="400">
+<p align="center">
+  <img src="images/logo.webp" width="400">
+</p>
 
 # Signal beep beep talk
 Siganl beep beep talk is a simple client-server communication project using UNIX signals.
