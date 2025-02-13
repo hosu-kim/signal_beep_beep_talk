@@ -6,15 +6,30 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/19 17:25:44 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/23 19:00:05 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/02/13 23:04:09 by hoskim           ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
+/**
+ * @file server.c
+ * @brief Server implementation for the Signal beep beep talk project
+ * 
+ * This file contains the implementation of the server side of the communication
+ * system. It receives and processes signals from clients,
+ * converting them back into characters and messages.
+ */
+
 #include "../includes/minitalk.h"
 
+/** @brief Global data structure instance */
 t_data	g_data = {NULL, 0, 0, 0};
 
-// initialize all members to NULL and 0 in g_data.
+/**
+ * @brief Resets the global data structure to initial state
+ * 
+ * Frees allocated memory and resets all counters and pointers to their
+ * initial values.
+ */
 void	reset_global_data(void)
 {
 	if (g_data.message)
@@ -26,8 +41,12 @@ void	reset_global_data(void)
 }
 
 /**
- * @brief It sets a sufficient buffer size to save the message.
- * @details return value 1 indicates the function has terminated successfully.
+ * @brief Resizes the message buffer when needed
+ * 
+ * @return int Returns 1 on success, 0 on failure
+ * 
+ * Handles dynamic memory allocation for the message buffer, doubling its size
+ * when needed up to MAX_BUFFER_SIZE.
  */
 static int	resize_message_buffer(void)
 {
@@ -58,11 +77,12 @@ static int	resize_message_buffer(void)
 	return (1);
 }
 
-/** @brief If Null character is detected, it prints the completed string,
- *	       or if more data remains, continues to build the completed string.
- 
- *  @note g_data.message[g_data.current_character] = 0; '\0' == 0 in ascii
- */		
+/**
+ * @brief Processes completed characters in the message buffer
+ * 
+ * Handles the completion of character reception, prints completed message,
+ * and manages buffer state.
+ */
 static void	process_completed_str(void)
 {
 	if (g_data.bit_position != 8)
@@ -89,7 +109,13 @@ static void	process_completed_str(void)
 }
 
 /**
- * @brief  it converts signals to char and stores the message buffer
+ * @brief Signal handler for coverting received signals to characters
+ * 
+ * @param signum Signal number (SIGUSR1 or SIGUSR2)
+ * @param info Signal information structure
+ * @param context Signal context
+ * 
+ * Processes incoming signals bit by bit to reconstruct characters.
  */
 void	signal_to_char(int signum, siginfo_t *info, void *context)
 {
@@ -113,6 +139,14 @@ void	signal_to_char(int signum, siginfo_t *info, void *context)
 	process_completed_str();
 }
 
+/**
+ * @brief Main function for the server program
+ * 
+ * @return int Returns 0 on success, 1 on error
+ * 
+ * Initializes the server, sets up signal handlers, and enters the main
+ * processing loop.
+ */
 int	main(void)
 {
 	if (!resize_message_buffer())

@@ -6,12 +6,27 @@
 /*   By: hoskim <hoskim@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 19:55:03 by hoskim            #+#    #+#             */
-/*   Updated: 2025/01/23 14:37:06 by hoskim           ###   ########.fr       */
+/*   Updated: 2025/02/13 23:10:07 by hoskim           ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
+/**
+ * @file server_utils.c
+ * @brief Utility functions for the server implementation
+ * 
+ * This file contains utility functions specifically used by the server
+ * component of the the Signal beep beep talk system
+ */
+
 #include "../includes/minitalk.h"
 
+/**
+ * @brief Handles server exit signals
+ * 
+ * @param signum Signal number received
+ * 
+ * Performs cleanup operations when the server receives an exit signal.
+ */
 void	handle_exit_signal(int signum)
 {
 	(void)signum;
@@ -19,6 +34,13 @@ void	handle_exit_signal(int signum)
 	exit(0);
 }
 
+/**
+ * @brief Initializes signal handlers for the server
+ * 
+ * @return int Returns 1 on success, 0 on failure
+ * 
+ * Sets up signal handlers for SIGUSR1 and SIGUSR2, as well as exit signals
+ */
 int	initialize_signal_handlers(void)
 {
 	struct sigaction	sa;
